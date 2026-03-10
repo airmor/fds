@@ -33,7 +33,7 @@ int main() {
         arr[i] = i;
     }
     int target = N; // Set the target
-    #if BSI
+    #if BSI // 计时并测试二分查找（迭代版）
     start = clock(); // Start the timer
     for (int i = 0; i < K_BSI; i++) {
         BinarySearchIterative(arr, N, target);
@@ -42,7 +42,7 @@ int main() {
     BSI_time = (double)(stop - start) / CLOCKS_PER_SEC; // Calculate the run time (seconds)
     printf("Binary Search Iterative: %f seconds\n", BSI_time);
     #endif
-    #if BSR
+    #if BSR // 计时并测试二分查找（递归版）
     start = clock(); // Start the timer
     for (int i = 0; i < K_BSR; i++) {
         BinarySearchRecursive(arr, N, target);
@@ -51,7 +51,7 @@ int main() {
     BSR_time = (double)(stop - start) / CLOCKS_PER_SEC; // Calculate the run time (seconds)
     printf("Binary Search Recursive: %f seconds\n", BSR_time);
     #endif
-    #if SSI
+    #if SSI // 计时并测试顺序查找（迭代版）
     start = clock(); // Start the timer
     for (int i = 0; i < K_SSI; i++) {
         SequentialSearchIterative(arr, N, target);
@@ -60,7 +60,7 @@ int main() {
     SSI_time = (double)(stop - start) / CLOCKS_PER_SEC; // Calculate the run time (seconds)
     printf("Sequential Search Iterative: %f seconds\n", SSI_time);
     #endif
-    #if SSR
+    #if SSR // 计时并测试顺序查找（递归版）
     start = clock(); // Start the timer
     for (int i = 0; i < K_SSR; i++) {
         SequentialSearchRecursive(arr, N, target);
