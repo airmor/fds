@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/fds_project1.dir/main.c.o CMakeFiles/fds_project1.dir/BinarySearch_iterative.c.o CMakeFiles/fds_project1.dir/BinarySearch_recursive.c.o CMakeFiles/fds_project1.dir/SequentialSearch_iterative.c.o CMakeFiles/fds_project1.dir/SequentialSearch_recursive.c.o -o fds_project1 

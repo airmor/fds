@@ -1,7 +1,7 @@
 #include "SequentialSearch_iterative.h"
 #include <stdio.h>
 
-int SequentialSearch_iterative(int arr[], int size, int target) {
+int SequentialSearchIterative(int arr[], int size, int target) {
     for (int i = 0; i < size; i++) {
         if (arr[i] == target) {
             return i; // Return the index of the target element

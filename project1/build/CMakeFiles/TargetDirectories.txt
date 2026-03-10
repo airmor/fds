@@ -1,0 +1,3 @@
+/home/airmor/C_code/fds/fds/project1/build/CMakeFiles/fds_project1.dir
+/home/airmor/C_code/fds/fds/project1/build/CMakeFiles/edit_cache.dir
+/home/airmor/C_code/fds/fds/project1/build/CMakeFiles/rebuild_cache.dir
