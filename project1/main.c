@@ -40,7 +40,7 @@ int main() {
     }
     stop = clock(); // Stop the timer
     BSI_time = (double)(stop - start) / CLOCKS_PER_SEC; // Calculate the run time (seconds)
-    printf("Binary Search Iterative: %f seconds\n", BSI_time);
+    printf("Binary Search Iterative: %f seconds  Turn: %d Ticks: %ld\n", BSI_time, K_BSI, stop - start);
     #endif
     #if BSR // 计时并测试二分查找（递归版）
     start = clock(); // Start the timer
@@ -49,7 +49,7 @@ int main() {
     }
     stop = clock(); // Stop the timer
     BSR_time = (double)(stop - start) / CLOCKS_PER_SEC; // Calculate the run time (seconds)
-    printf("Binary Search Recursive: %f seconds\n", BSR_time);
+    printf("Binary Search Recursive: %f seconds  Turn: %d Ticks: %ld\n", BSR_time, K_BSR, stop - start);
     #endif
     #if SSI // 计时并测试顺序查找（迭代版）
     start = clock(); // Start the timer
@@ -58,7 +58,7 @@ int main() {
     }
     stop = clock(); // Stop the timer
     SSI_time = (double)(stop - start) / CLOCKS_PER_SEC; // Calculate the run time (seconds)
-    printf("Sequential Search Iterative: %f seconds\n", SSI_time);
+    printf("Sequential Search Iterative: %f seconds  Turn: %d Ticks: %ld\n", SSI_time, K_SSI, stop - start);
     #endif
     #if SSR // 计时并测试顺序查找（递归版）
     start = clock(); // Start the timer
@@ -67,7 +67,7 @@ int main() {
     }
     stop = clock(); // Stop the timer
     SSR_time = (double)(stop - start) / CLOCKS_PER_SEC; // Calculate the run time (seconds)
-    printf("Sequential Search Recursive: %f seconds\n", SSR_time);
+    printf("Sequential Search Recursive: %f seconds  Turn: %d Ticks: %ld\n", SSR_time, K_SSR, stop - start);
     #endif
     return 0;
 }

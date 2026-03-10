@@ -13,8 +13,8 @@ add_executable(
     )
 
 # 设置不同算法的循环次数K和整数数量N
-set(K_BSI 1000000) # Binary Search Iterative
-set(K_BSR 1000000) # Binary Search Recursive
+set(K_BSI 10000000) # Binary Search Iterative
+set(K_BSR 10000000) # Binary Search Recursive
 set(K_SSI 1000000) # Sequential Search Iterative
 set(K_SSR 1000000) # Sequential Search Recursive
 set(N 10000) # Integer Quantity
