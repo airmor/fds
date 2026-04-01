@@ -16,7 +16,7 @@ struct Node{ // Node structure for Binary Search Tree
     struct Node* right;    // Right child pointer
 };
 
-Tree read_inport(Node** node);//read the inport information of the Binary Search Tree,and return the Binary Search Tree
+Tree read_inport(Node** node,int* num);//read the inport information of the Binary Search Tree,and return the Binary Search Tree
 
 Tree build_tree(int* parent_node_index,Node* node,int n);//build the Binary Search Tree with the inport information, and return the Binary Search Tree
 
@@ -28,20 +28,37 @@ bool print_preorder_traversal(Tree root);//print the preorder traversal of the B
 
 bool print_result(Tree tree);//Print the tree with the preorder traversal.The values in each line are separated by 1 space, and there must be no extra space at the beginning or the end of the line.
 
+bool check(int n,Tree tree,int*now,int*count);//check if the number of nodes in the Binary Search Tree T is n and the tree is a valid BST, if true, return true, otherwise return false
+
 int main()// Main function: entry point of the program
 {
     Node* T1_node=NULL;    // Pointer to array of nodes for T1
     Node* T2_node=NULL;    // Pointer to array of nodes for T2
-    Tree T1=read_inport(&T1_node);    // Read T1 BST from input
+    int n1=0,n2=0;    // Number of nodes in T1 and T2
+    Tree T1=read_inport(&T1_node,&n1);    // Read T1 BST from input
     if(T1==NULL)     // Check if T1 is empty
     {
         printf("The Binary Search Tree is empty!");
         return 0;
     }
-    Tree T2=read_inport(&T2_node);    // Read T2 BST from input
+    Tree T2=read_inport(&T2_node,&n2);    // Read T2 BST from input
     if(T2==NULL)    // Check if T2 is empty
     {
         printf("The Binary Search Tree is empty!");
+        return 0;
+    }
+    int now=-MAX_k-1;    // Initialize now with a value outside valid range (to avoid matching first node)
+    int count=0;    // Initialize count for node counting in check function
+    if(!(check(n1,T1,&now,&count)&&count==n1))    // Check if T1 is a valid BST with n1 nodes
+    {
+        printf("Invalid input for the Binary Search Tree!");
+        return 0;
+    }
+    now=-MAX_k-1;    // Reset now for T2
+    count=0;    // Reset count for node counting in check function
+    if(!(check(n2,T2,&now,&count)&&count==n2))    // Check if T2 is a valid BST with n2 nodes
+    {
+        printf("Invalid input for the Binary Search Tree!");
         return 0;
     }
     // Get target sum N
@@ -75,12 +92,12 @@ int main()// Main function: entry point of the program
 }
 
 //Node** node - pointer to array of nodes for the BST
-Tree read_inport(Node** node)//read the inport information of the Binary Search Tree,and return the Binary Search Tree
+Tree read_inport(Node** node,int* num)//read the inport information of the Binary Search Tree,and return the Binary Search Tree
 {
     // Get number of nodes
     int n;
     scanf("%d", &n);
-
+    *num=n;    // Store number of nodes in provided pointer
     if(n<=0||n>MAX_n)    // Validate n range
     {
         printf("Invalid input for the number of nodes in the Binary Search Tree!");
@@ -246,4 +263,25 @@ bool print_result(Tree tree)//Print the tree with the preorder traversal.The val
     printf("\n");    // Print newline
 
     return true;
+}
+
+/*n - expected number of nodes in the BST;
+  tree - root of BST to check;
+  now - pointer to variable to count nodes during traversal
+*/
+bool check(int n,Tree tree,int*now,int*count)//check if the number of nodes in the Binary Search Tree T is n and the tree is a valid BST, if true, return true, otherwise return false
+{
+    if(tree==NULL)    // If tree is NULL, return true (empty tree is a valid BST)
+    {
+        return true;
+    }
+    bool left_check=check(n,tree->left,now,count);    // Recursively check left subtree
+    if(tree->data<*now)    // If current node's data is less than previous node's data, it's not a valid BST
+    {
+        return false;
+    }
+    *now=tree->data;    // Update now to current node's data
+    (*count)++;    // Increment node count
+    bool right_check=check(n,tree->right,now,count);    // Recursively check right subtree
+    return left_check && right_check;    // Return true if both left and right subtrees are valid BSTs
 }

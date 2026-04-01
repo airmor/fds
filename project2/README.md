@@ -189,6 +189,7 @@ typedef struct Node* Tree;
 3. The root node has parent index -1
 4. All input values are within specified ranges(-2,000,000,000 to 2,000,000,000)
 5. The program handles large inputs (up to 200,000 nodes per tree)
+6. The tree is not a BST or its numbers of nodes is not equal to the number of n 
 
 ## Development Environment
 - Compiler: gcc 13.3.0
