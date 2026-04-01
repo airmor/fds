@@ -1,0 +1,68 @@
+
+
+
+
+Fundamentals of Data Structures
+
+
+Laboratory Projects
+
+
+
+
+Minimum Requirements on Writing a Project Report
+ 
+
+
+Title of Project
+
+Author’s Name
+
+Date: yyyy-mm-dd
+
+ 
+Chapter 1:  Introduction
+Problem description and (if any) background of the algorithms.
+Chapter 2:  Algorithm Specification
+Description (pseudo-code preferred) of all the algorithms involved for solving the problem, including specifications of main data structures.
+Chapter 3:  Testing Results
+Table of test cases.  Each test case usually consists of a brief description of the purpose of this case, the expected result, the actual behavior of your program, the possible cause of a bug if your program does not function as expected, and the current status (“pass”, or “corrected”, or “pending”).
+Chapter 4:  Analysis and Comments
+Analysis of the time and space complexities of the algorithms.  Comments on further possible improvements.
+Appendix:  Source Code (in C)
+At least 30% of the lines must be commented.  Otherwise the code will NOT be evaluated.
+Declaration
+I hereby declare that all the work done in this project titled "XXX" is of my independent effort.
+
+Please keep in mind that these are the “minimum” requirements.  Other requirements will be specified according to each project assignment.
+
+ 
+Hand-in
+
+The zipped file must contain the following:
+
+
+
+
+
+
+
+
+
+
+Submit for Peer Review
+For peer review you are supposed to submit your work through the online system at https://pintia.cn/.  Your name must NOT appear in any of your submitted documents.  Any leak of identification (name, student ID, nickname, file properties, etc) will be considered as a fraud, and as a consequence you will be graded zero.  Intentional disclosure of identity constitutes cheating.
+After the deadline of submitting your project, the peer review begins.  You must complete your review work before the deadline.
+
+Submit to your Teaching Assistant
+The revised project reports are supposed to be submitted through the online system at https://pintia.cn/ again, in a separate problem set.
+When submitting to TA, your report document must be saved as a PDF file.  The names of your report document and your source code files must be in the format Teacher2026_StudentID_ProjectNumber.*. For example, hqm2026_3250103939_P2.pdf is considered to be the report for Project 2 by student with ID being 3250103939, and the instructor is represented by “hqm”.
+
+
+ 
+Late Penalty
+
+Each assignment is due at 10:00pm on a specified date.  The door for submission will be closed automatically afterwards.
+For the peer review, there is NO REMEDY.  Any one who misses the deadline will be graded zero automatically.
+For the final review, late assignments will have to be sent to your instructor assistant through email (e.g. Qinming He’s students are supposed to send email to Guoyao Yu 874238092@qq.com).   The assignments received between 10:01pm – 11:59pm on the day they are due will be penalized 5% of the points on that lab.  After the due date, the penalty will be 10% for each day they are late.
+
