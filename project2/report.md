@@ -142,15 +142,18 @@ SEARCH_BST(root, x):
 
 ### 3.1 Test Case Table (Reserved)
 
-| Case ID | Purpose | Expected Result | Actual Behavior | Possible Cause (if failed) | Current Status |
+| Case ID | Purpose | Input | Expected Output | Actual Output | Status |
 |---|---|---|---|---|---|
-| TC-01 | Basic case with one or more solutions | `true` + correct equations + two preorder lines |  |  | pending |
-| TC-02 | No solution case | `false` + two preorder lines |  |  | pending |
-| TC-03 | Multiple solutions and order check | equations sorted by ascending `A` |  |  | pending |
-| TC-04 | Duplicate keys in `T1` | duplicate equations are printed only once |  |  | pending |
-| TC-05 | Boundary values near `-2 x 10^9` and `2 x 10^9` | no overflow-related incorrect output |  |  | pending |
-| TC-06 | Invalid parent index input | error message for invalid tree input |  |  | pending |
-| TC-07 | Invalid `N` range input | error message for invalid target value |  |  | pending |
+| TC-01 | Basic: multiple solutions, ascending A | See test.md TC-01 input | See test.md TC-01 expected output |  | pending |
+| TC-02 | No solution exists | See test.md TC-02 input | See test.md TC-02 expected output |  | pending |
+| TC-03 | Duplicate A in T1 (deduplication) | See test.md TC-03 input | See test.md TC-03 expected output |  | pending |
+| TC-04 | Negative and zero values | See test.md TC-04 input | See test.md TC-04 expected output |  | pending |
+| TC-05 | Boundary values (±2e9) | See test.md TC-05 input | See test.md TC-05 expected output |  | pending |
+| TC-06 | Invalid parent index | See test.md TC-06 input | See test.md TC-06 expected output |  | pending |
+| TC-07 | Invalid target N | See test.md TC-07 input | See test.md TC-07 expected output |  | pending |
+| TC-08 | Invalid BST structure (left child conflict) | See test.md TC-08 input | See test.md TC-08 expected output |  | pending |
+| TC-09 | Multiple roots (two parent -1) | See test.md TC-09 input | See test.md TC-09 expected output |  | pending |
+| TC-10 | Cycle exists, parent index valid | See test.md TC-10 input | See test.md TC-10 expected output |  | pending |
 
 ### 3.2 Notes for Filling This Chapter
 

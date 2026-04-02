@@ -1,6 +1,6 @@
 ## A+B with Binary Search Trees - 测试用例设计
 
-下面给出 7 组测试，覆盖：有解、无解、重复值去重、负数、边界值、非法树输入、非法目标值输入。
+下面给出 10 组测试，覆盖：有解、无解、重复值去重、负数、边界值、非法父下标、非法目标值、非完整BST结构、多根节点。
 
 ### TC-01 基础有解（多组答案，按 A 升序）
 
@@ -199,3 +199,48 @@ The Binary Search Tree is empty!
 ```text
 Invalid input for the target value N!
 ```
+
+### TC-08 非完整 BST 结构（同一父节点同侧冲突）
+
+用途：验证“树结构不完整/不合法”能被识别（同一父节点出现两个左孩子）。
+
+输入：
+
+```text
+3
+10 -1
+5 0
+4 0
+1
+0 -1
+10
+```
+
+期望输出：
+
+```text
+Invalid input for the Binary Search Tree!
+```
+
+### TC-09 多根节点（两个 parent 为 -1）
+
+用途：验证出现多个根节点时，能够识别为非法 BST 结构。
+
+输入：
+
+```text
+3
+10 -1
+5 -1
+15 0
+1
+0 -1
+10
+```
+
+期望输出：
+
+```text
+Invalid input for the Binary Search Tree!
+```
+
