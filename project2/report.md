@@ -1,3 +1,10 @@
+---
+title: "Document"
+output:
+  word_document:
+    path: D:\ZJU\homework\fds\project_2\report.docx
+---
+
 # Title of Project
 
 A+B with Binary Search Trees (Project 2)
@@ -8,7 +15,7 @@ A+B with Binary Search Trees (Project 2)
 
 # Date
 
-2026-04-01
+[Fill in the date]
 
 ## Chapter 1: Introduction
 
@@ -61,12 +68,20 @@ For each test case:
 ### 2.1 Main Data Structures
 
 ```c
-struct Node {
-      int data;
-      struct Node* left;
-      struct Node* right;
+#define true 1 // Define true as 1
+#define false 0 // Define false as 0
+#define MAX_n 200000 // Maximum number of nodes
+#define MAX_k 2000000000 // Maximum value of node key
+
+typedef struct Node* Tree; // Define Tree as pointer to Node
+typedef struct Node Node; // Define Node as struct Node
+typedef int bool; // Define bool as int
+
+struct Node{ // Node structure for Binary Search Tree
+    int data;    // Key value
+    struct Node* left;    // Left child pointer
+    struct Node* right;    // Right child pointer
 };
-typedef struct Node* Tree;
 ```
 
 - `Node` stores key value and two child pointers.
@@ -74,17 +89,91 @@ typedef struct Node* Tree;
 
 ### 2.2 Algorithm Pseudo-code
 
+#### Main Procedure: Program Flow (`main`)
+
+```text
+MAIN():
+   T1_nodes = NULL
+   T2_nodes = NULL
+   n1 = 0, n2 = 0
+
+   T1 = READ_TREE(&T1_nodes, &n1)
+   if T1 == NULL:
+      print "The Binary Search Tree is empty!"
+      exit
+
+   T2 = READ_TREE(&T2_nodes, &n2)
+   if T2 == NULL:
+      print "The Binary Search Tree is empty!"
+      free T1_nodes
+      exit
+
+   now = -MAX_k - 1
+   count = 0
+   if CHECK(T1, &now, &count) == false OR count != n1:
+      print "Invalid input for the Binary Search Tree!"
+      free T1_nodes, T2_nodes
+      exit
+
+   now = -MAX_k - 1
+   count = 0
+   if CHECK(T2, &now, &count) == false OR count != n2:
+      print "Invalid input for the Binary Search Tree!"
+      free T1_nodes, T2_nodes
+      exit
+
+   read N
+   if N < -MAX_k OR N > MAX_k:
+      print "Invalid input for the target value N!"
+      free T1_nodes, T2_nodes
+      exit
+
+   lastA = -MAX_k - 1
+   found = FIND_SUM(T1, T2, N, false, &lastA)
+   if found == false:
+      print "false"
+
+   PRINT_RESULT(T1)
+   PRINT_RESULT(T2)
+
+   free T1_nodes
+   free T2_nodes
+   exit
+```
+
 #### Algorithm A: Read and Build BST
 
 ```text
-READ_TREE():
+READ_TREE(node_array_ptr, n_ptr):
    read n
-   validate n in [1, MAX_n]
-   allocate node array and parent index array
+   store n into *n_ptr
+   if n <= 0 OR n > MAX_n:
+      print "Invalid input for the number of nodes in the Binary Search Tree!"
+      return NULL
+
+   allocate node array with n elements
+   if allocation fails:
+      print "Memory allocation failed!"
+      return NULL
+
+   allocate parent index array with n elements
+   if allocation fails:
+      print "Memory allocation failed!"
+      free node array
+      return NULL
+
    for i in [0, n-1]:
       read key[i], parent[i]
-      validate key range and parent index range
       initialize node[i].left = NULL, node[i].right = NULL
+      if parent[i] < -1 OR parent[i] >= n:
+         print "Invalid input for the parent node index!"
+         free node array and parent index array
+         return NULL
+      if key[i] < -MAX_k OR key[i] > MAX_k:
+         print "Invalid input for the node value!"
+         free node array and parent index array
+         return NULL
+
    root = BUILD_TREE(parent, node, n)
    free parent
    return root
@@ -106,10 +195,13 @@ BUILD_TREE(parent, node, n):
 ```text
 CHECK(tree, now, count):
    if tree == NULL: return true
+
    left_ok = CHECK(tree.left, now, count)
    if tree.data < *now: return false
+
    *now = tree.data
    *count = *count + 1
+
    right_ok = CHECK(tree.right, now, count)
    return left_ok AND right_ok
 ```
@@ -118,13 +210,15 @@ CHECK(tree, now, count):
 
 ```text
 FIND_SUM(T1, T2, N, found_flag, lastA):
-   if T1 == NULL or T2 == NULL: return false
+   if T1 == NULL OR T2 == NULL: return false
+
    found_flag = FIND_SUM(T1.left, T2, N, found_flag, lastA) OR found_flag
 
    if T1.data != *lastA AND SEARCH_BST(T2, N - T1.data):
       if found_flag == false:
          print "true"
          found_flag = true
+
       print "N = T1.data + (N - T1.data)"
       *lastA = T1.data
 
@@ -136,6 +230,27 @@ SEARCH_BST(root, x):
    if root.data == x: return true
    if x < root.data: return SEARCH_BST(root.left, x)
    else: return SEARCH_BST(root.right, x)
+```
+
+#### Algorithm D: Print Preorder Traversal Without Extra Spaces
+
+```text
+PRINT_RESULT(tree):
+   if tree == NULL: return false
+
+   print tree.data without leading space
+   PRINT_PREORDER_WITH_SPACE(tree.left)
+   PRINT_PREORDER_WITH_SPACE(tree.right)
+   print newline
+   return true
+
+PRINT_PREORDER_WITH_SPACE(node):
+   if node == NULL: return false
+
+   print " " + node.data
+   PRINT_PREORDER_WITH_SPACE(node.left)
+   PRINT_PREORDER_WITH_SPACE(node.right)
+   return true
 ```
 
 ## Chapter 3: Testing Results
