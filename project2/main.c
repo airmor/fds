@@ -38,27 +38,27 @@ int main()// Main function: entry point of the program
     Tree T1=read_inport(&T1_node,&n1);    // Read T1 BST from input
     if(T1==NULL)     // Check if T1 is empty
     {
-        printf("The Binary Search Tree is empty!");
+        printf("The Binary Search Tree is empty!\n");
         return 0;
     }
     Tree T2=read_inport(&T2_node,&n2);    // Read T2 BST from input
     if(T2==NULL)    // Check if T2 is empty
     {
-        printf("The Binary Search Tree is empty!");
+        printf("The Binary Search Tree is empty!\n");
         return 0;
     }
     int now=-MAX_k-1;    // Initialize now with a value outside valid range (to avoid matching first node)
     int count=0;    // Initialize count for node counting in check function
     if(!(check(n1,T1,&now,&count)&&count==n1))    // Check if T1 is a valid BST with n1 nodes
     {
-        printf("Invalid input for the Binary Search Tree!");
+        printf("Invalid input for the Binary Search Tree!\n");
         return 0;
     }
     now=-MAX_k-1;    // Reset now for T2
     count=0;    // Reset count for node counting in check function
     if(!(check(n2,T2,&now,&count)&&count==n2))    // Check if T2 is a valid BST with n2 nodes
     {
-        printf("Invalid input for the Binary Search Tree!");
+        printf("Invalid input for the Binary Search Tree!\n");
         return 0;
     }
     // Get target sum N
@@ -68,7 +68,7 @@ int main()// Main function: entry point of the program
     if(N<-MAX_k||N>MAX_k)    // Validate N range
     {
         // Print error message
-        printf("Invalid input for the target value N!");
+        printf("Invalid input for the target value N!\n");
         // Exit program
         return 0;
     }
@@ -100,7 +100,7 @@ Tree read_inport(Node** node,int* num)//read the inport information of the Binar
     *num=n;    // Store number of nodes in provided pointer
     if(n<=0||n>MAX_n)    // Validate n range
     {
-        printf("Invalid input for the number of nodes in the Binary Search Tree!");
+        printf("Invalid input for the number of nodes in the Binary Search Tree!\n");
         return NULL;        // Return NULL indicating error
     }
 
@@ -108,7 +108,7 @@ Tree read_inport(Node** node,int* num)//read the inport information of the Binar
 
     if(*node==NULL)    // Check if allocation succeeded
     {
-        printf("Memory allocation failed!");
+        printf("Memory allocation failed!\n");
         return NULL;        // Return NULL indicating error
     }
 
@@ -116,7 +116,7 @@ Tree read_inport(Node** node,int* num)//read the inport information of the Binar
 
     if(parent_node_index==NULL)    // Check if allocation succeeded
     {
-        printf("Memory allocation failed!");
+        printf("Memory allocation failed!\n");
         return NULL;        // Return NULL indicating error
     }
 
@@ -131,7 +131,7 @@ Tree read_inport(Node** node,int* num)//read the inport information of the Binar
 
         if(parent_node_index[i]<-1 || parent_node_index[i]>=n)        // Validate parent index range
         {
-            printf("Invalid input for the parent node index!");
+            printf("Invalid input for the parent node index!\n");
             // Free allocated memory
             free(*node);
             free(parent_node_index);
@@ -140,7 +140,7 @@ Tree read_inport(Node** node,int* num)//read the inport information of the Binar
 
         if((*node)[i].data<-MAX_k || (*node)[i].data>MAX_k)        // Validate node data range
         {
-            printf("Invalid input for the node value!");
+            printf("Invalid input for the node value!\n");
             // Free allocated memory
             free(*node);
             free(parent_node_index);
