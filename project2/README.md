@@ -14,7 +14,7 @@ The solutions must be printed in ascending order of A values, and each equation 
 The input consists of three parts:
 
 1. **T1 (First Binary Search Tree)**:
-   - First line: n₁ (number of nodes in T1, 1 ≤ n₁ ≤ 2×10⁵)
+   - First line: n1 (number of nodes in T1, 0 <= n1 <= 2x10^5)
    - Next n₁ lines: Each line contains two integers:
      - k (key value, -2×10⁹ ≤ k ≤ 2×10⁹)
      - p (parent node index, -1 ≤ p < n₁)
@@ -23,7 +23,7 @@ The input consists of three parts:
 
 2. **T2 (Second Binary Search Tree)**:
    - Same format as T1
-   - First line: n₂ (number of nodes in T2)
+   - First line: n2 (number of nodes in T2, 0 <= n2 <= 2x10^5)
    - Next n₂ lines: key value and parent index for each node
 
 3. **Target Value**:
@@ -36,7 +36,13 @@ The input consists of three parts:
    - Solutions are printed in ascending order of A values
    - Each equation is printed only once (no duplicates)
 3. Next line: Preorder traversal of T1 (space-separated values)
+   - If T1 is empty, this line is blank
 4. Last line: Preorder traversal of T2 (space-separated values)
+   - If T2 is empty, this line is blank
+
+Special behavior in current implementation:
+- If either tree is empty and this is valid input (n=0), the program prints false and exits after printing traversal lines.
+- If a tree read fails while n is not 0, the program prints Invalid input for the Binary Search Tree! and exits.
 
 **Note**: No extra spaces at the beginning or end of any line.
 
@@ -62,6 +68,7 @@ The program (`main.c`) consists of the following functions:
 ### Key Features
 - Memory management with proper allocation and deallocation
 - Input validation for node count, parent indices, and key values
+- Supports empty tree input (n=0)
 - Recursive tree traversal algorithms
 - Efficient BST search (O(h) time complexity)
 - Avoids duplicate solution printing
@@ -70,11 +77,17 @@ The program (`main.c`) consists of the following functions:
 
 1. **Tree Construction**:
    - Read number of nodes and allocate memory
+   - If n is 0, treat as an empty tree (not an error)
    - Read each node's key and parent index
    - Validate input ranges
    - Build tree by linking nodes based on parent indices and BST properties
 
-2. **Solution Search**:
+2. **Early Branch for Empty/Invalid Trees**:
+   - If T1 or T2 is NULL:
+     - If corresponding n is not 0, print Invalid input for the Binary Search Tree! and exit
+     - Otherwise print false, print traversal lines (blank line for empty tree), and exit
+
+3. **Solution Search**:
    - Perform inorder traversal of T1 (ascending order of values)
    - For each node A in T1:
      - Calculate B = N - A
@@ -82,7 +95,7 @@ The program (`main.c`) consists of the following functions:
      - If found and not a duplicate, print the solution
    - Track the last printed A to avoid duplicates
 
-3. **Output**:
+4. **Output**:
    - Print `true`/`false` based on solution existence
    - Print all solutions in required format
    - Print preorder traversals of both trees
@@ -91,12 +104,19 @@ The program (`main.c`) consists of the following functions:
 
 ### Compilation
 ```bash
-gcc -o main main.c
+gcc -Wall -Wextra -O0 -o main main.c
 ```
 
 ### Execution
 ```bash
 ./main
+```
+
+On Windows (PowerShell), you can run:
+
+```powershell
+gcc -Wall -Wextra -O0 main.c -o main.exe
+.\main.exe
 ```
 
 ### Example
@@ -172,8 +192,10 @@ typedef struct Node* Tree;
 - Invalid node count range
 - Invalid parent index
 - Invalid key value range
+- Invalid BST structure detected by in-order validation and node counting
 - Memory allocation failure
-- Empty tree detection
+- Invalid target value N
+- Empty tree is treated as valid input (n=0)
 
 ## Complexity Analysis
 
@@ -184,12 +206,13 @@ typedef struct Node* Tree;
 
 ## Notes
 
-1. The program assumes valid BST input according to the problem specification
+1. The program does not assume valid BST input; it validates and may reject malformed input
 2. Parent indices are 0-based
 3. The root node has parent index -1
-4. All input values are within specified ranges(-2,000,000,000 to 2,000,000,000)
+4. All input values should be within specified ranges (-2,000,000,000 to 2,000,000,000)
 5. The program handles large inputs (up to 200,000 nodes per tree)
-6. The tree is not a BST or its numbers of nodes is not equal to the number of n 
+6. Empty trees (n=0) are valid and produce blank traversal lines
+7. If tree structure is invalid or reachable node count mismatches n, output is Invalid input for the Binary Search Tree!
 
 ## Development Environment
 - Compiler: gcc 13.3.0

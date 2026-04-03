@@ -98,14 +98,27 @@ MAIN():
    n1 = 0, n2 = 0
 
    T1 = READ_TREE(&T1_nodes, &n1)
-   if T1 == NULL:
-      print "The Binary Search Tree is empty!"
-      exit
-
    T2 = READ_TREE(&T2_nodes, &n2)
-   if T2 == NULL:
-      print "The Binary Search Tree is empty!"
-      free T1_nodes
+    if T1 == NULL OR T2 == NULL:
+        if (T1 == NULL AND n1 != 0) OR (T2 == NULL AND n2 != 0):
+            print "Invalid input for the Binary Search Tree!"
+            exit
+
+        print "false"
+        if T1 != NULL:
+            PRINT_RESULT(T1)
+        else:
+            print blank line
+
+        if T2 != NULL:
+            PRINT_RESULT(T2)
+        else:
+            print blank line
+
+        if T1_nodes != NULL:
+            free T1_nodes
+        if T2_nodes != NULL:
+            free T2_nodes
       exit
 
    now = -MAX_k - 1
@@ -147,9 +160,12 @@ MAIN():
 READ_TREE(node_array_ptr, n_ptr):
    read n
    store n into *n_ptr
-   if n <= 0 OR n > MAX_n:
+    if n < 0 OR n > MAX_n:
       print "Invalid input for the number of nodes in the Binary Search Tree!"
       return NULL
+
+    if n == 0:
+        return NULL
 
    allocate node array with n elements
    if allocation fails:
@@ -159,7 +175,6 @@ READ_TREE(node_array_ptr, n_ptr):
    allocate parent index array with n elements
    if allocation fails:
       print "Memory allocation failed!"
-      free node array
       return NULL
 
    for i in [0, n-1]:
