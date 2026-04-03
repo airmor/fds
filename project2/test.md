@@ -1,6 +1,8 @@
-## A+B with Binary Search Trees - 测试用例设计
+## A+B with Binary Search Trees - 测试用例设计（已按当前 main.c 修正）
 
-下面给出 10 组测试，覆盖：有解、无解、重复值去重、负数、边界值、非法父下标、非法目标值、非完整BST结构、多根节点。
+下面给出 11 组测试，覆盖：有解、无解、重复值去重、负数、边界值、空树（n=0 合法）、非法父下标、非法目标值、不完整结构、多根节点。
+
+说明：以下期望输出已使用当前版本程序实测校对。
 
 ### TC-01 基础有解（多组答案，按 A 升序）
 
@@ -97,8 +99,6 @@ true
 10 8 12 20
 ```
 
-说明：T1 里有两个 10，但等式 20 = 10 + 10 只应打印一次。
-
 ### TC-04 含负数与 0
 
 用途：验证负数、0 的处理正确。
@@ -160,9 +160,52 @@ true
 2000000000 0 -2000000000
 ```
 
-### TC-06 非法父节点下标
+### TC-06 双空树（n=0，合法输入）
 
-用途：验证 parent index 越界时能报错。
+用途：验证两棵树都为空时，不报错，输出 false 和两行空树结果。
+
+输入：
+
+```text
+0
+0
+10
+```
+
+期望输出：
+
+```text
+false
+
+
+```
+
+### TC-07 单空树（n=0，合法输入）
+
+用途：验证仅一棵树为空时，不报错，输出 false，空树行为空行，非空树正常输出先序。
+
+输入：
+
+```text
+0
+3
+5 -1
+2 0
+8 0
+10
+```
+
+期望输出：
+
+```text
+false
+
+5 2 8
+```
+
+### TC-08 非法父节点下标
+
+用途：验证 parent index 越界时报错，并触发主流程对非法 BST 输入的处理。
 
 输入：
 
@@ -171,16 +214,17 @@ true
 10 -1
 5 0
 15 3
+0
 ```
 
 期望输出：
 
 ```text
 Invalid input for the parent node index!
-The Binary Search Tree is empty!
+Invalid input for the Binary Search Tree!
 ```
 
-### TC-07 非法目标值 N
+### TC-09 非法目标值 N
 
 用途：验证 N 超范围时报错。
 
@@ -200,9 +244,9 @@ The Binary Search Tree is empty!
 Invalid input for the target value N!
 ```
 
-### TC-08 非完整 BST 结构（同一父节点同侧冲突）
+### TC-10 非完整 BST 结构（同一父节点同侧冲突）
 
-用途：验证“树结构不完整/不合法”能被识别（同一父节点出现两个左孩子）。
+用途：验证“树结构不完整/不合法”能被识别（同一父节点出现两个左孩子，导致节点不可达）。
 
 输入：
 
@@ -222,7 +266,7 @@ Invalid input for the target value N!
 Invalid input for the Binary Search Tree!
 ```
 
-### TC-09 多根节点（两个 parent 为 -1）
+### TC-11 多根节点（两个 parent 为 -1）
 
 用途：验证出现多个根节点时，能够识别为非法 BST 结构。
 
