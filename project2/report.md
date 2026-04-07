@@ -334,7 +334,7 @@ typedef struct Node Node; // Define Node as struct Node
 typedef int bool; // Define bool as int
 
 struct Node{ // Node structure for Binary Search Tree
-    int data;    // Key value
+    long long data;    // Key value
     struct Node* left;    // Left child pointer
     struct Node* right;    // Right child pointer
 };
@@ -343,15 +343,15 @@ Tree read_inport(Node** node,int* num);//read the inport information of the Bina
 
 Tree build_tree(int* parent_node_index,Node* node,int n);//build the Binary Search Tree with the inport information, and return the Binary Search Tree
 
-bool find_sum_is_N(Tree T1,Tree T2,int N,bool flag,int* A);//find the number A from T1 and B from T2 such that A+B=N,if such A and B exist, return true, otherwise return false
+bool find_sum_is_N(Tree T1,Tree T2,long long N,bool flag,long long* A);//find the number A from T1 and B from T2 such that A+B=N,if such A and B exist, return true, otherwise return false
 
-bool find_n_in_tree(Tree root,int n);//find the number of nodes in the Binary Search Tree T with value n,if such nodes exist, return true, otherwise return false
+bool find_n_in_tree(Tree root,long long n);//find the number of nodes in the Binary Search Tree T with value n,if such nodes exist, return true, otherwise return false
 
 bool print_preorder_traversal(Tree root);//print the preorder traversal of the Binary Search Tree T, and return true if the Binary Search Tree is not empty, otherwise return false
 
 bool print_result(Tree tree);//Print the tree with the preorder traversal.The values in each line are separated by 1 space, and there must be no extra space at the beginning or the end of the line.
 
-bool check(int n,Tree tree,int*now,int*count);//check if the number of nodes in the Binary Search Tree T is n and the tree is a valid BST, if true, return true, otherwise return false
+bool check(int n,Tree tree,long long*now,int*count);//check if the number of nodes in the Binary Search Tree T is n and the tree is a valid BST, if true, return true, otherwise return false
 
 int main()// Main function: entry point of the program
 {
@@ -368,8 +368,8 @@ int main()// Main function: entry point of the program
             return 0;
         }
         // Get target sum N
-        int N;
-        scanf("%d",&N);
+        long long N;
+        scanf("%lld",&N);
         printf("false\n");   // Print false if either tree is NULL
         if(T1!=NULL)    // If T1 is not NULL, print its preorder traversal
         {
@@ -394,7 +394,7 @@ int main()// Main function: entry point of the program
         }
         return 0;
     }
-    int now=-MAX_k-1;    // Initialize now with a value outside valid range (to avoid matching first node)
+    long long now=-MAX_k-1;    // Initialize now with a value outside valid range (to avoid matching first node)
     int count=0;    // Initialize count for node counting in check function
     if(!(check(n1,T1,&now,&count)&&count==n1))    // Check if T1 is a valid BST with n1 nodes
     {
@@ -409,8 +409,8 @@ int main()// Main function: entry point of the program
         return 0;
     }
     // Get target sum N
-    int N;
-    scanf("%d",&N);
+    long long N;
+    scanf("%lld",&N);
 
     if(N<-MAX_k||N>MAX_k)    // Validate N range
     {
@@ -420,7 +420,7 @@ int main()// Main function: entry point of the program
         return 0;
     }
 
-    int A=-MAX_k-1;    // Initialize A with a value outside valid range (to avoid matching first node)
+    long long A=-MAX_k-1;    // Initialize A with a value outside valid range (to avoid matching first node)
 
     if(!find_sum_is_N(T1,T2,N,false,&A))    // Find if there exists A in T1 and B in T2 such that A+B=N
     {
@@ -480,7 +480,7 @@ Tree read_inport(Node** node,int* num)//read the inport information of the Binar
     for(int i=0;i<n;i++)//Get node data and parent index for each node
     {
 
-        scanf("%d %d",&(*node)[i].data,&parent_node_index[i]);        // Read node data and parent index
+        scanf("%lld %d",&(*node)[i].data,&parent_node_index[i]);        // Read node data and parent index
         (*node)[i].left=NULL;        // Initialize left child pointer to NULL
         (*node)[i].right=NULL;        // Initialize right child pointer to NULL
 
@@ -543,7 +543,7 @@ Tree build_tree(int* parent_node_index,Node* node,int n)//build the Binary Searc
   N - target sum;
   flag - flag indicating if solution found,if true, solution found now, if false, solution not found now;
   A - pointer to variable to store solution which means the current max A for A+B=N*/
-bool find_sum_is_N(Tree T1,Tree T2,int N,bool flag,int* A)//find the number A from T1 and B from T2 such that A+B=N,if such A and B exist, return true, otherwise return false
+bool find_sum_is_N(Tree T1,Tree T2,long long N,bool flag,long long* A)//find the number A from T1 and B from T2 such that A+B=N,if such A and B exist, return true, otherwise return false
 {
     if(T1==NULL||T2==NULL)    // If either tree is empty, return false
     {
@@ -559,7 +559,7 @@ bool find_sum_is_N(Tree T1,Tree T2,int N,bool flag,int* A)//find the number A fr
             printf("true\n");
             flag=true;
         }
-        printf("%d = %d + %d\n",N,T1->data,N-T1->data);        // Print the equation N = A + B
+        printf("%lld = %lld + %lld\n",N,T1->data,N-T1->data);        // Print the equation N = A + B
         *A=T1->data;        // Store current node's value in A to avoid duplicate printing
     }
 
@@ -571,7 +571,7 @@ bool find_sum_is_N(Tree T1,Tree T2,int N,bool flag,int* A)//find the number A fr
 /*root - root of BST to search;
   n - value to find in the BST
 */
-bool find_n_in_tree(Node* root,int n)//find the number of nodes in the Binary Search Tree T with value n,if such nodes exist, return true, otherwise return false
+bool find_n_in_tree(Node* root,long long n)//find the number of nodes in the Binary Search Tree T with value n,if such nodes exist, return true, otherwise return false
 {
     if(root==NULL)    // If root is NULL, value not found
     {
@@ -598,7 +598,7 @@ bool print_preorder_traversal(Tree root)//print the preorder traversal of the Bi
     {
         return false;
     }
-    printf(" %d",root->data);    // Print node data with leading space
+    printf(" %lld",root->data);    // Print node data with leading space
     print_preorder_traversal(root->left);    // Recursively print left subtree
     print_preorder_traversal(root->right);    // Recursively print right subtree
     return true;
@@ -612,7 +612,7 @@ bool print_result(Tree tree)//Print the tree with the preorder traversal.The val
         return false;
     }
     
-    printf("%d",tree->data);    // Print root data without leading space
+    printf("%lld",tree->data);    // Print root data without leading space
     print_preorder_traversal(tree->left);    // Print left subtree with leading spaces handled by print_preorder_traversal
     print_preorder_traversal(tree->right);    // Print right subtree with leading spaces handled by print_preorder_traversal
     printf("\n");    // Print newline
@@ -624,7 +624,7 @@ bool print_result(Tree tree)//Print the tree with the preorder traversal.The val
   tree - root of BST to check;
   now - pointer to variable to count nodes during traversal
 */
-bool check(int n,Tree tree,int*now,int*count)//check if the number of nodes in the Binary Search Tree T is n and the tree is a valid BST, if true, return true, otherwise return false
+bool check(int n,Tree tree,long long*now,int*count)//check if the number of nodes in the Binary Search Tree T is n and the tree is a valid BST, if true, return true, otherwise return false
 {
     if(tree==NULL)    // If tree is NULL, return true (empty tree is a valid BST)
     {
