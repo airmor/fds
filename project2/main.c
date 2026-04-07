@@ -275,7 +275,7 @@ bool print_preorder_traversal(Tree root)//print the preorder traversal of the Bi
     {
         return false;
     }
-    printf(" %d",root->data);    // Print node data with leading space
+    printf(" %lld",root->data);    // Print node data with leading space
     print_preorder_traversal(root->left);    // Recursively print left subtree
     print_preorder_traversal(root->right);    // Recursively print right subtree
     return true;
@@ -289,7 +289,7 @@ bool print_result(Tree tree)//Print the tree with the preorder traversal.The val
         return false;
     }
     
-    printf("%d",tree->data);    // Print root data without leading space
+    printf("%lld",tree->data);    // Print root data without leading space
     print_preorder_traversal(tree->left);    // Print left subtree with leading spaces handled by print_preorder_traversal
     print_preorder_traversal(tree->right);    // Print right subtree with leading spaces handled by print_preorder_traversal
     printf("\n");    // Print newline
