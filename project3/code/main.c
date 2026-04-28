@@ -98,7 +98,7 @@ int main(){
         }
     }
     FreeNodes(nodes,Nv);
-    if(minHeap->indexes=NULL){
+    if(minHeap->indexes==NULL){
         printf("Memory allocation failed\n");
         free(minHeap);
         return 0;
@@ -118,6 +118,7 @@ Node* CreatEdges(Node* nodes,int Nv,int Ne){
             FreeNodes(nodes,Nv);
             return NULL;
         }
+        nodes[i].edges->next=NULL;
     }
     for(int i=1;i<=Ne;i++){
         int temp=scanf("%d %d %d",&a,&b,&cost);
