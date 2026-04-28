@@ -184,32 +184,46 @@ Node* Initial(Node* nodes,MinHeap* MinHeap,int Nv){
 }
 
 MinHeap* PercolateUp(Node* nodes,MinHeap* minHeap,int Nv,int index){
-    while(index>1){
-        int parent=index/2;
-        if(nodes[minHeap->indexes[index]].distance<nodes[minHeap->indexes[parent]].distance){
-            int temp=minHeap->indexes[index];
-            minHeap->indexes[index]=minHeap->indexes[parent];
-            minHeap->indexes[parent]=temp;
-            index=parent;
-        }
-        else break;
+    int parent=index/2;
+    if(parent>=1 && nodes[minHeap->indexes[index]].distance<nodes[minHeap->indexes[parent]].distance){
+        int temp=minHeap->indexes[index];
+        minHeap->indexes[index]=minHeap->indexes[parent];
+        minHeap->indexes[parent]=temp;
+        nodes[minHeap->indexes[index]].index=index;
+        nodes[minHeap->indexes[parent]].index=parent;
+        return PercolateUp(nodes,minHeap,Nv,parent);
     }
     return minHeap;
 }
 
 MinHeap* PercolateDown(Node* nodes,MinHeap* minHeap,int Nv,int index){
-    while(index*2<=minHeap->size){
-        int child=index*2;
-        if(child+1<=minHeap->size && nodes[minHeap->indexes[child+1]].distance<nodes[minHeap->indexes[child]].distance){
-            child++;
-        }
-        if(nodes[minHeap->indexes[index]].distance>nodes[minHeap->indexes[child]].distance){
+    if(index*2>minHeap->size)return minHeap;
+    if(index*2+1>minHeap->size){
+        if(nodes[minHeap->indexes[index]].distance>nodes[minHeap->indexes[index*2]].distance){
             int temp=minHeap->indexes[index];
-            minHeap->indexes[index]=minHeap->indexes[child];
-            minHeap->indexes[child]=temp;
-            index=child;
+            minHeap->indexes[index]=minHeap->indexes[index*2];
+            minHeap->indexes[index*2]=temp;
+            nodes[minHeap->indexes[index]].index=index;
+            nodes[minHeap->indexes[index*2]].index=index*2;
+            return PercolateDown(nodes,minHeap,Nv,index*2);
         }
-        else break;
+        return minHeap;
+    }
+    int left=index*2;
+    int right=index*2+1;
+    int min;
+    if(nodes[minHeap->indexes[left]].distance<=nodes[minHeap->indexes[right]].distance){
+        min=left;
+    }else{
+        min=right;
+    }
+    if(nodes[minHeap->indexes[index]].distance>nodes[minHeap->indexes[min]].distance){
+        int temp=minHeap->indexes[index];
+        minHeap->indexes[index]=minHeap->indexes[min];
+        minHeap->indexes[min]=temp;
+        nodes[minHeap->indexes[index]].index=index;
+        nodes[minHeap->indexes[min]].index=min;
+        return PercolateDown(nodes,minHeap,Nv,min);
     }
     return minHeap;
 }
@@ -217,14 +231,17 @@ MinHeap* PercolateDown(Node* nodes,MinHeap* minHeap,int Nv,int index){
 MinHeap* Insert(Node* nodes,MinHeap* minHeap,int Nv,int node){
     minHeap->size++;
     minHeap->indexes[minHeap->size]=node;
+    nodes[node].index=minHeap->size;
     return PercolateUp(nodes,minHeap,Nv,minHeap->size);
 }
 
 MinHeap* Delete(Node* nodes,MinHeap* minHeap,int Nv,int index){
     minHeap->indexes[index]=minHeap->indexes[minHeap->size];
+    nodes[minHeap->indexes[index]].index=index;
     minHeap->size--;
     PercolateDown(nodes,minHeap,Nv,index);
     minHeap->indexes[minHeap->size+1]=0;
+    return minHeap;
 }
 
 bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
@@ -236,6 +253,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
     while(current!=NULL){
         nodes[current->data].distance=current->cost;
         nodes[current->data].before=source;
+        nodes[current->data].visited=true;
         Insert(nodes,minHeap,Nv,current->data);
         current=current->next;
     }
@@ -249,7 +267,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
             return false;
         }
         else{
-            Delete(nodes,minHeap,Nv,num);
+            Delete(nodes,minHeap,Nv,nodes[num].index);
         }
         current=nodes[num].edges->next;
         while(current!=NULL){
