@@ -83,6 +83,54 @@ struct MinHeap{
 
 ### 2.2 Algorithm Pseudo-code
 
+#### Algorithm 0: Main Procedure
+
+```text
+MAIN():
+    read Nv, Ne
+    if Nv or Ne out of range:
+        print "Invalid input"
+        exit
+
+    nodes = allocate Node[Nv + 1]
+    if nodes == NULL:
+        print "Memory allocation failed"
+        exit
+
+    nodes = BUILD_GRAPH(Nv, Ne)
+    if nodes == NULL:
+        exit
+
+    minHeap = allocate MinHeap
+    if minHeap == NULL:
+        print "Memory allocation failed"
+        free nodes
+        exit
+
+    minHeap.indexes = allocate int[Nv + 1]
+    if minHeap.indexes == NULL:
+        print "Memory allocation failed"
+        free nodes and minHeap
+        exit
+
+    read K
+    if K out of range:
+        print "Invalid input"
+        free nodes and minHeap
+        exit
+
+    for each query in 1..K:
+        INITIALIZE(Nv)
+        if CHECK_SEQUENCE(query) is true:
+            print "Yes"
+        else:
+            print "No"
+
+    FREE_NODES(nodes)
+    free minHeap.indexes and minHeap
+    exit
+```
+
 #### Algorithm A: Build Graph (CreatEdges)
 
 ```text
