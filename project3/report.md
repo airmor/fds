@@ -55,13 +55,13 @@ typedef struct Edge Edge;
 typedef struct MinHeap MinHeap;
 
 // Each vertex stores the current tentative distance, visit state,
-// predecessor, heap position, and adjacency-list head.
+// predecessor, heap position, and adjacency-list head pointer.
 struct Node{
     int distance;   // Current shortest distance estimate.
     bool visited;   // Whether this vertex has been discovered.
     int before;     // Previous vertex on the current shortest path.
     int index;      // Current heap position of this vertex.
-    Edge* edges;    // Dummy head for the adjacency list.
+    Edge* edges;    // Head of the adjacency list.
 };
 
 // Each edge stores the destination vertex, its cost, and the next edge.
@@ -78,7 +78,7 @@ struct MinHeap{
 };
 ```
 
-- The graph is stored as adjacency lists with a dummy head per vertex.
+- The graph is stored as adjacency lists without dummy head nodes.
 - A min-heap stores the frontier vertices ordered by tentative distance.
 
 ### 2.2 Algorithm Pseudo-code
@@ -135,27 +135,22 @@ MAIN():
 
 ```text
 BUILD_GRAPH(Nv, Ne):
-    allocate nodes[1..Nv]
+    initialize nodes[1..Nv]
     for v = 1..Nv:
-        nodes[v].edges = new dummy head
-        nodes[v].edges.next = NULL
+        nodes[v].edges = NULL
 
     repeat Ne times:
         read (u, v, w)
         create edge e1 = (u -> v, cost w)
         create edge e2 = (v -> u, cost w)
 
-        // append e1 to u's list by walking to tail
-        cur = nodes[u].edges
-        while cur.next != NULL:
-            cur = cur.next
-        cur.next = e1
+        // head insert e1 into u's list
+        e1.next = nodes[u].edges
+        nodes[u].edges = e1
 
-        // append e2 to v's list by walking to tail
-        cur = nodes[v].edges
-        while cur.next != NULL:
-            cur = cur.next
-        cur.next = e2
+        // head insert e2 into v's list
+        e2.next = nodes[v].edges
+        nodes[v].edges = e2
 
     return nodes
 ```
@@ -276,7 +271,7 @@ Full inputs and outputs are listed in test.md. The table below summarizes the re
 The analysis below uses Nv for the number of vertices, Ne for the number of edges, and K for the number of sequences.
 
 - main: input reading and dispatching is O(Nv + Ne + K * Nv) plus the costs of called functions.
-- CreatEdges: initialize nodes in O(Nv). Each append walks to the list tail, so the total cost is O(sum_u deg(u)^2). Worst case is O(Ne^2) under highly skewed degrees. Average case (degrees relatively balanced) is O(Nv + Ne^2 / Nv).
+- CreatEdges: initialize adjacency heads in O(Nv), then perform two O(1) head inserts per edge, so total O(Nv + Ne).
 - FreeNodes: visit and free each adjacency node once, O(Nv + Ne).
 - Initial: reset all vertices and heap slots, O(Nv).
 - PercolateUp / PercolateDown: each heap fix is O(log Nv).
@@ -284,13 +279,12 @@ The analysis below uses Nv for the number of vertices, Ne for the number of edge
 - IsDijkstraSequence: read the sequence in O(Nv). Each edge is relaxed at most once; each relax triggers at most one heap operation, so O(Ne log Nv). Total per sequence is O((Nv + Ne) log Nv).
 
 Total time complexity (current implementation):
-- Worst case: O(Nv + Ne^2 + K * (Nv + Ne) log Nv)=O(Ne^2 + K * (Nv + Ne) log Nv).
-- Average case (degrees relatively balanced): O(Nv + Ne^2 / Nv + K * (Nv + Ne) log Nv)=O(Ne^2/Nv + K * (Nv + Ne) log Nv).
+- O(Nv + Ne + K * (Nv + Ne) log Nv).
 
 ### 4.2 Space Complexity
 
 - Vertex array: O(Nv) for Node records.
-- Edge storage: O(Nv + Ne), including Nv dummy heads and 2 * Ne adjacency nodes.
+- Edge storage: O(Ne), storing 2 * Ne adjacency nodes for an undirected graph.
 - Heap storage: O(Nv) for the indexes array, plus O(1) for the MinHeap struct.
 - Extra variables and call stack: O(1) (no recursion).
 
@@ -298,12 +292,18 @@ Total space complexity: O(Nv + Ne).
 
 ### 4.3 Comments and Possible Improvements
 
-1. The simulation correctly allows ties by comparing against the current heap minimum distance.
-2. The adjacency list uses a dummy head, which simplifies insertion and traversal.
-3. A Fibonacci heap could reduce theoretical complexity but would increase implementation cost.
-4. Input validation could be extended to reject repeated vertices in sequences.
+1. The checker is correct in principle: each selected vertex must match the current minimum tentative distance, so tie cases are handled naturally.
+2. The adjacency list uses head insertion without dummy nodes, making graph construction O(Nv + Ne) and simpler in memory layout.
+3. Decrease-key is handled by heap index percolation, which is essential to keep heap order valid after distance updates.
+4. Further code-level improvements: validate each query as a full permutation of 1..Nv, use a safer INF sentinel (for example INT_MAX / 4), and replace recursive heap percolation with iterative loops.
 
 ## Appendix: Source Code (in C)
+
+To keep the report and implementation fully synchronized, the canonical source code is maintained in the repository file below:
+
+- project3/code/main.c
+
+This report's data structure description, pseudocode, and complexity analysis are all aligned with that file's current implementation (no dummy head nodes, adjacency-list head insertion).
 
 ```c
 // Include stdio for scanf and printf.
@@ -343,7 +343,7 @@ struct Node{
     bool visited;   // Whether this vertex has been discovered.
     int before;     // Previous vertex on the current shortest path.
     int index;      // Current heap position of this vertex.
-    Edge* edges;    // Dummy head for the adjacency list.
+    Edge* edges;    // Head of the adjacency list.
 };
 
 // Each edge stores the destination vertex, its cost, and the next edge.
@@ -459,18 +459,12 @@ Node* CreatEdges(Node* nodes,int Nv,int Ne){
     // Clear the vertex array so every field starts from a known state.
     memset(nodes,0,sizeof(Node)*(Nv+1));                    // Initialize all vertex records to zero.
 
-    // Create a dummy head node for each adjacency list.
+    // Initialize each adjacency list head to NULL.
     for(int i=1;i<=Nv;i++){                                 // Visit every vertex once.
-        nodes[i].edges=(Edge*)malloc(sizeof(Edge));         // Allocate a dummy head for the adjacency list.
-        if(nodes[i].edges==NULL){                           // Check whether allocation succeeded.
-            printf("Memory allocation failed\n");          // Report allocation failure.
-            FreeNodes(nodes,Nv);                            // Free everything allocated so far.
-            return NULL;                                    // Signal failure to the caller.
-        }
-        nodes[i].edges->next=NULL;                          // The dummy head initially points to nothing.
+        nodes[i].edges=NULL;                                // No edges yet.
     }
 
-    // Read each undirected edge and append it to both endpoints.
+    // Read each undirected edge and insert it into both endpoints.
     for(int i=1;i<=Ne;i++){                                 // Process every input edge.
         int temp=scanf("%d %d %d",&a,&b,&cost);            // Read one edge record.
         if(a>Nv || a<1 || b>Nv || b<1 || cost<0 || cost>Max_Cost || temp!=3){ // Validate the edge record.
@@ -501,25 +495,19 @@ Node* CreatEdges(Node* nodes,int Nv,int Ne){
         b_NewEdge->cost=cost;                               // Store the edge weight.
         b_NewEdge->next=NULL;                               // This node is currently the tail.
 
-        // Append the new edge to vertex a.
-        Edge* current=nodes[a].edges;                       // Start from the dummy head of vertex a.
-        while(current->next!=NULL){                         // Walk to the end of a's adjacency list.
-            current=current->next;                          // Advance to the next edge.
-        }
-        current->next=a_NewEdge;                            // Link the new forward edge at the tail.
+        // Insert the new edge at the head of vertex a.
+        a_NewEdge->next=nodes[a].edges;                     // Point to the current head edge.
+        nodes[a].edges=a_NewEdge;                           // Link the new forward edge at the head.
 
-        // Append the reverse edge to vertex b.
-        current=nodes[b].edges;                             // Start from the dummy head of vertex b.
-        while(current->next!=NULL){                         // Walk to the end of b's adjacency list.
-            current=current->next;                          // Advance to the next edge.
-        }
-        current->next=b_NewEdge;                            // Link the new reverse edge at the tail.
+        // Insert the reverse edge at the head of vertex b.
+        b_NewEdge->next=nodes[b].edges;                     // Point to the current head edge.
+        nodes[b].edges=b_NewEdge;                           // Link the new reverse edge at the head.
     }
     return nodes;                                           // Return the fully built graph.
 }
 
 Node* FreeNodes(Node* nodes,int Nv){
-    // Free every adjacency list, including the dummy head node.
+    // Free every adjacency list.
     for(int i=1;i<=Nv;i++){                                 // Visit each vertex in order.
         Edge* current=nodes[i].edges;                       // Start from the head of the adjacency list.
         while(current!=NULL){                               // Traverse the whole list.
@@ -623,7 +611,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
     nodes[source].visited=true;                              // Mark the source as discovered.
 
     // Initialize the frontier with the source's adjacent vertices.
-    Edge* current=nodes[source].edges->next;                 // Start from the first real adjacency node.
+    Edge* current=nodes[source].edges;                       // Start from the adjacency list head.
     while(current!=NULL){                                    // Traverse all neighbors of the source.
         nodes[current->data].distance=current->cost;         // Set the initial tentative distance.
         nodes[current->data].before=source;                  // Set the source as predecessor.
@@ -650,7 +638,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
         }
 
         // Relax every edge out of the selected vertex.
-        current=nodes[num].edges->next;                      // Start from the first real adjacency node.
+        current=nodes[num].edges;                            // Start from the adjacency list head.
         while(current!=NULL){                                // Traverse all neighbors of the selected vertex.
             if(nodes[current->data].visited==false){         // First time discovering this vertex.
                 nodes[current->data].visited=true;           // Mark it as discovered.
@@ -661,7 +649,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
             else if(nodes[current->data].distance>nodes[num].distance+current->cost){ // Found a shorter path.
                 nodes[current->data].distance=nodes[num].distance+current->cost;     // Update the distance.
                 nodes[current->data].before=num;            // Update the predecessor.
-                PercolateUp(nodes,minHeap,Nv,current->data); // Restore heap order after the decrease.
+                PercolateUp(nodes,minHeap,Nv,nodes[current->data].index); // Restore heap order after the decrease.
             }
             current=current->next;                           // Move to the next adjacency node.
         }

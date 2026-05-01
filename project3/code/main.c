@@ -35,7 +35,7 @@ struct Node{
     bool visited;   // Whether this vertex has been discovered.
     int before;     // Previous vertex on the current shortest path.
     int index;      // Current heap position of this vertex.
-    Edge* edges;    // Dummy head for the adjacency list.
+    Edge* edges;    // Head of the adjacency list.
 };
 
 // Each edge stores the destination vertex, its cost, and the next edge.
@@ -151,18 +151,12 @@ Node* CreatEdges(Node* nodes,int Nv,int Ne){
     // Clear the vertex array so every field starts from a known state.
     memset(nodes,0,sizeof(Node)*(Nv+1));                    // Initialize all vertex records to zero.
 
-    // Create a dummy head node for each adjacency list.
+    // Initialize each adjacency list head to NULL.
     for(int i=1;i<=Nv;i++){                                 // Visit every vertex once.
-        nodes[i].edges=(Edge*)malloc(sizeof(Edge));         // Allocate a dummy head for the adjacency list.
-        if(nodes[i].edges==NULL){                           // Check whether allocation succeeded.
-            printf("Memory allocation failed\n");          // Report allocation failure.
-            FreeNodes(nodes,Nv);                            // Free everything allocated so far.
-            return NULL;                                    // Signal failure to the caller.
-        }
-        nodes[i].edges->next=NULL;                          // The dummy head initially points to nothing.
+        nodes[i].edges=NULL;                                // No edges yet.
     }
 
-    // Read each undirected edge and append it to both endpoints.
+    // Read each undirected edge and insert it into both endpoints.
     for(int i=1;i<=Ne;i++){                                 // Process every input edge.
         int temp=scanf("%d %d %d",&a,&b,&cost);            // Read one edge record.
         if(a>Nv || a<1 || b>Nv || b<1 || cost<0 || cost>Max_Cost || temp!=3){ // Validate the edge record.
@@ -193,25 +187,19 @@ Node* CreatEdges(Node* nodes,int Nv,int Ne){
         b_NewEdge->cost=cost;                               // Store the edge weight.
         b_NewEdge->next=NULL;                               // This node is currently the tail.
 
-        // Append the new edge to vertex a.
-        Edge* current=nodes[a].edges;                       // Start from the dummy head of vertex a.
-        while(current->next!=NULL){                         // Walk to the end of a's adjacency list.
-            current=current->next;                          // Advance to the next edge.
-        }
-        current->next=a_NewEdge;                            // Link the new forward edge at the tail.
+        // Insert the new edge at the head of vertex a.
+        a_NewEdge->next=nodes[a].edges;                     // Point to the current head edge.
+        nodes[a].edges=a_NewEdge;                           // Link the new forward edge at the head.
 
-        // Append the reverse edge to vertex b.
-        current=nodes[b].edges;                             // Start from the dummy head of vertex b.
-        while(current->next!=NULL){                         // Walk to the end of b's adjacency list.
-            current=current->next;                          // Advance to the next edge.
-        }
-        current->next=b_NewEdge;                            // Link the new reverse edge at the tail.
+        // Insert the reverse edge at the head of vertex b.
+        b_NewEdge->next=nodes[b].edges;                     // Point to the current head edge.
+        nodes[b].edges=b_NewEdge;                           // Link the new reverse edge at the head.
     }
     return nodes;                                           // Return the fully built graph.
 }
 
 Node* FreeNodes(Node* nodes,int Nv){
-    // Free every adjacency list, including the dummy head node.
+    // Free every adjacency list.
     for(int i=1;i<=Nv;i++){                                 // Visit each vertex in order.
         Edge* current=nodes[i].edges;                       // Start from the head of the adjacency list.
         while(current!=NULL){                               // Traverse the whole list.
@@ -315,7 +303,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
     nodes[source].visited=true;                              // Mark the source as discovered.
 
     // Initialize the frontier with the source's adjacent vertices.
-    Edge* current=nodes[source].edges->next;                 // Start from the first real adjacency node.
+    Edge* current=nodes[source].edges;                       // Start from the adjacency list head.
     while(current!=NULL){                                    // Traverse all neighbors of the source.
         nodes[current->data].distance=current->cost;         // Set the initial tentative distance.
         nodes[current->data].before=source;                  // Set the source as predecessor.
@@ -342,7 +330,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
         }
 
         // Relax every edge out of the selected vertex.
-        current=nodes[num].edges->next;                      // Start from the first real adjacency node.
+        current=nodes[num].edges;                            // Start from the adjacency list head.
         while(current!=NULL){                                // Traverse all neighbors of the selected vertex.
             if(nodes[current->data].visited==false){         // First time discovering this vertex.
                 nodes[current->data].visited=true;           // Mark it as discovered.
