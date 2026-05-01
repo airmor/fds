@@ -31,32 +31,50 @@ Output:
 ### 2.1 Main Data Structures
 
 ```c
+// Use int as a simple boolean type.
+#define bool int
+// Define the true literal as 1.
+#define true 1
+// Define the false literal as 0.
+#define false 0
+
+// Maximum number of vertices allowed by the problem.
 #define Max_Nv 1000
+// Maximum number of edges allowed by the problem.
 #define Max_Ne 100000
+// Maximum number of query sequences allowed by the problem.
 #define Max_K 100
+// Maximum edge weight allowed by the problem.
 #define Max_Cost 100
 
+// Vertex record used by the graph and the heap.
 typedef struct Node Node;
+// Edge record used by the adjacency lists.
 typedef struct Edge Edge;
+// Heap record used to track candidate vertices.
 typedef struct MinHeap MinHeap;
 
+// Each vertex stores the current tentative distance, visit state,
+// predecessor, heap position, and adjacency-list head.
 struct Node{
-    int distance;
-    int visited;
-    int before;
-    int index;
-    Edge* edges;
+    int distance;   // Current shortest distance estimate.
+    bool visited;   // Whether this vertex has been discovered.
+    int before;     // Previous vertex on the current shortest path.
+    int index;      // Current heap position of this vertex.
+    Edge* edges;    // Dummy head for the adjacency list.
 };
 
+// Each edge stores the destination vertex, its cost, and the next edge.
 struct Edge{
-    int data;
-    int cost;
-    struct Edge* next;
+    int data;          // Adjacent vertex id.
+    int cost;          // Edge weight.
+    struct Edge* next;  // Next edge in the adjacency list.
 };
 
+// Min-heap of vertex ids used to simulate Dijkstra's frontier.
 struct MinHeap{
-    int size;
-    int* indexes;
+    int size;      // Number of valid elements currently in the heap.
+    int* indexes;  // Vertex ids arranged according to heap order.
 };
 ```
 
@@ -188,18 +206,18 @@ CHECK_SEQUENCE(seq[1..Nv]):
 
 Full inputs and outputs are listed in test.md. The table below summarizes the results.
 
-| Case ID | Purpose | Expected Result | Actual Behavior | Possible Cause of Bug | Status |
-|---|---|---|---|---|---|
-| TC-01 | Official sample | Yes, Yes, Yes, No | Matches expected | - | pass |
-| TC-02 | Equal shortest paths | Yes, Yes, No, No | Matches expected | - | pass |
-| TC-03 | Chain graph | Yes, No, No | Matches expected | - | pass |
-| TC-04 | Minimum graph size | Yes, Yes | Matches expected | - | pass |
-| TC-05 | Max edge weight | Yes, Yes | Matches expected | - | pass |
-| TC-06 | Complete graph | Yes, Yes, Yes | Matches expected | - | pass |
-| TC-07 | Star graph | Yes, Yes | Matches expected | - | pass |
-| TC-08 | Multi-branch ties | Yes, Yes, No | Matches expected | - | pass |
-| TC-09 | Large weight gap | Yes, No | Matches expected | - | pass |
-| TC-10 | Cycle graph | No, No, Yes | Matches expected | - | pass |
+| Case ID | Purpose | Input | Expected Result | Actual Behavior | Possible Cause of Bug (if failed) | Status |
+|---|---|---|---|---|---|---|
+| TC-01 | Official sample; verify output matches the problem statement | 5 7<br>1 2 2<br>1 5 1<br>2 3 1<br>2 4 1<br>2 5 2<br>3 5 1<br>3 4 1<br>4<br>5 1 3 4 2<br>5 3 1 2 4<br>2 3 4 5 1<br>3 2 1 5 4 | Yes<br>Yes<br>Yes<br>No | Yes<br>Yes<br>Yes<br>No | - | pass |
+| TC-02 | Equal shortest paths; different valid tie orders | 4 4<br>1 2 1<br>1 3 1<br>2 4 1<br>3 4 1<br>4<br>1 2 3 4<br>1 3 2 4<br>1 4 2 3<br>1 2 4 3 | Yes<br>Yes<br>No<br>No | Yes<br>Yes<br>No<br>No | - | pass |
+| TC-03 | Chain graph; only increasing distance order is valid | 4 3<br>1 2 2<br>2 3 2<br>3 4 2<br>3<br>1 2 3 4<br>1 3 2 4<br>1 2 4 3 | Yes<br>No<br>No | Yes<br>No<br>No | - | pass |
+| TC-04 | Minimum graph size | 2 1<br>1 2 5<br>2<br>1 2<br>2 1 | Yes<br>Yes | Yes<br>Yes | - | pass |
+| TC-05 | Max edge weight boundary (w = 100) | 2 1<br>1 2 100<br>2<br>1 2<br>2 1 | Yes<br>Yes | Yes<br>Yes | - | pass |
+| TC-06 | Complete graph; all permutations should be valid | 3 3<br>1 2 1<br>1 3 1<br>2 3 1<br>3<br>1 2 3<br>1 3 2<br>2 1 3 | Yes<br>Yes<br>Yes | Yes<br>Yes<br>Yes | - | pass |
+| TC-07 | Star graph; leaf order is flexible | 4 3<br>1 2 2<br>1 3 2<br>1 4 2<br>2<br>1 2 3 4<br>1 4 3 2 | Yes<br>Yes | Yes<br>Yes | - | pass |
+| TC-08 | Multiple equal-length branches | 5 6<br>1 2 1<br>1 3 1<br>2 4 1<br>3 4 1<br>2 5 2<br>3 5 2<br>3<br>1 2 3 4 5<br>1 3 2 4 5<br>1 2 4 3 5 | Yes<br>Yes<br>No | Yes<br>Yes<br>No | - | pass |
+| TC-09 | Large weight gap | 3 2<br>1 2 100<br>2 3 1<br>2<br>1 2 3<br>1 3 2 | Yes<br>No | Yes<br>No | - | pass |
+| TC-10 | Cycle graph | 4 4<br>1 2 1<br>2 3 1<br>3 4 1<br>4 1 1<br>3<br>1 2 3 4<br>1 4 3 2<br>1 2 4 3 | No<br>No<br>Yes | No<br>No<br>Yes | - | pass |
 
 ## Chapter 4: Analysis and Comments
 
