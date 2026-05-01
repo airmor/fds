@@ -353,7 +353,7 @@ bool IsDijkstraSequence(Node* nodes,MinHeap* minHeap,int Nv){
             else if(nodes[current->data].distance>nodes[num].distance+current->cost){ // Found a shorter path.
                 nodes[current->data].distance=nodes[num].distance+current->cost;     // Update the distance.
                 nodes[current->data].before=num;            // Update the predecessor.
-                PercolateUp(nodes,minHeap,Nv,current->data); // Restore heap order after the decrease.
+                PercolateUp(nodes,minHeap,Nv,nodes[current->data].index); // Restore heap order after the decrease.
             }
             current=current->next;                           // Move to the next adjacency node.
         }

@@ -252,7 +252,7 @@ CHECK_SEQUENCE(seq[1..Nv]):
 
 ## Chapter 3: Testing Results
 
-Full inputs and outputs are listed in test.md. The table below summarizes the results.
+Full inputs and outputs are listed in test.md. The table below summarizes the results for 12 cases, including decrease-key scenarios.
 
 | Case ID | Purpose | Input | Expected Result | Actual Behavior | Possible Cause of Bug (if failed) | Status |
 |---|---|---|---|---|---|---|
@@ -266,6 +266,8 @@ Full inputs and outputs are listed in test.md. The table below summarizes the re
 | TC-08 | Multiple equal-length branches | 5 6<br>1 2 1<br>1 3 1<br>2 4 1<br>3 4 1<br>2 5 2<br>3 5 2<br>3<br>1 2 3 4 5<br>1 3 2 4 5<br>1 2 4 3 5 | Yes<br>Yes<br>No | Yes<br>Yes<br>No | - | pass |
 | TC-09 | Large weight gap | 3 2<br>1 2 100<br>2 3 1<br>2<br>1 2 3<br>1 3 2 | Yes<br>No | Yes<br>No | - | pass |
 | TC-10 | Cycle graph | 4 4<br>1 2 1<br>2 3 1<br>3 4 1<br>4 1 1<br>3<br>1 2 3 4<br>1 4 3 2<br>1 2 4 3 | No<br>No<br>Yes | No<br>No<br>Yes | - | pass |
+| TC-11 | Decrease-key; shorter path discovered after insertion | 3 3<br>1 2 10<br>1 3 1<br>3 2 1<br>2<br>1 3 2<br>1 2 3 | Yes<br>No | Yes<br>No | - | pass |
+| TC-12 | Decrease-key in branching paths | 4 5<br>1 2 5<br>1 3 1<br>3 2 1<br>2 4 1<br>3 4 10<br>2<br>1 3 2 4<br>1 2 3 4 | Yes<br>No | Yes<br>No | - | pass |
 
 ## Chapter 4: Analysis and Comments
 
